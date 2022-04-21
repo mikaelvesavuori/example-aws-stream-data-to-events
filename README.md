@@ -1,6 +1,6 @@
 # Example AWS Architecture: Streaming data to events
 
-This repo contains a complete, working architecture on AWS that will take in streaming data, store them in S3 and DynamoDB, and then emit events with their contents.
+This repo contains a complete, working architecture on AWS that will take in streaming data, store it in S3 and DynamoDB, and then emit events with their contents.
 
 The example intends to be a valid and truthful, yet not completely minimal, example of this pattern. The state of this work is "solid", but can (and should!) be improved and adapted for the actual needs you might have. Please see the `Improvements and TODO` sections for concise ideas and open suggestions.
 
