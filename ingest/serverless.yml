@@ -1,0 +1,105 @@
+service: data-events-ingest
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+  stage: ${opt:stage, "demo"}
+  region: eu-north-1
+  memorySize: 1024
+  timeout: 10
+  logRetentionInDays: 7
+  versionFunctions: false
+  deploymentBucket:
+    blockPublicAccess: true
+    maxPreviousDeploymentArtifacts: 5
+    serverSideEncryption: AES256
+  stackTags:
+    Usage: ${self:service}
+  tags:
+    Usage: ${self:service}
+  apiGateway:
+    minimumCompressionSize: 1024
+  tracing:
+    apiGateway: true
+    lambda: true
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - xray:PutTelemetryRecords
+            - xray:PutTraceSegments
+          Resource:
+            - "*"
+
+plugins:
+  - serverless-webpack
+  - serverless-offline
+  - serverless-iam-roles-per-function
+
+package:
+  individually: true
+  patterns:
+    - node_modules/aws-sdk/**
+    - node_modules/aws-lambda/**
+
+custom:
+  aws:
+    # EDIT THE BELOW TO YOUR ACCOUNT ID
+    awsAccountId: 123412341234
+    customEventbridgeBusName: "DataIngestBus"
+    databaseName: "data-events-datalake"
+    queueName: "data-events-queue"
+    arns:
+      customEventbridgeBusArn: "arn:aws:events:${self:provider.region}:${self:custom.aws.awsAccountId}:event-bus/${self:custom.aws.customEventbridgeBusName}"
+      databaseArn: "arn:aws:dynamodb:${self:provider.region}:${self:custom.aws.awsAccountId}:table/${self:custom.aws.databaseName}"
+      streamArn: "arn:aws:dynamodb:${self:provider.region}:${self:custom.aws.awsAccountId}:table/${self:custom.aws.databaseName}/stream/*"
+      sqsArn: "arn:aws:sqs:${self:provider.region}:${self:custom.aws.awsAccountId}:${self:custom.aws.queueName}.fifo"
+
+functions:
+  IntegrationEventEmitter:
+    handler: src/IntegrationEventEmitter/adapters/web/IntegrationEventEmitter.handler
+    description: DynamoDB trigger function
+    iamRoleStatements:
+      - Effect: "Allow"
+        Action:
+          - dynamodb:DescribeStream
+          - dynamodb:GetRecords
+          - dynamodb:GetShardIterator
+          - dynamodb:ListStreams
+          - dynamodb:ListShards
+        Resource: ${self:custom.aws.arns.streamArn}
+      - Effect: Allow
+        Action:
+          - events:PutEvents
+        Resource: ${self:custom.aws.arns.customEventbridgeBusArn}
+    environment:
+      REGION: ${self:provider.region}
+      EVENT_BUS_NAME: ${self:custom.aws.customEventbridgeBusName}
+
+  EventStorer:
+    handler: src/EventStorer/adapters/web/EventStorer.handler
+    description: Read event from SQS and store event in DynamoDB
+    iamRoleStatements:
+      - Effect: "Allow"
+        Action:
+          - dynamodb:PutItem
+        Resource: ${self:custom.aws.arns.databaseArn}
+      - Effect: "Allow"
+        Action:
+          - sqs:DeleteMessage
+          - sqs:GetQueueAttributes
+          - sqs:ReceiveMessage
+        Resource: ${self:custom.aws.arns.sqsArn}
+    environment:
+      REGION: ${self:provider.region}
+      TABLE_NAME: ${self:custom.aws.databaseName}
+
+  Transformer:
+    handler: src/Transformer/adapters/web/Transformer.handler
+    description: Kinesis Firehose event transformer
+    iamRoleStatements:
+      - Effect: "Allow"
+        Action:
+          - sqs:SendMessage
+        Resource: ${self:custom.aws.arns.sqsArn}

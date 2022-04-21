@@ -1,0 +1,24 @@
+{
+  "name": "example-aws-stream-data-to-events-generator",
+  "version": "1.0.0",
+  "description": "Service that creates demo payloads for the solution that streams data to events",
+  "author": "Mikael Vesavuori",
+  "homepage": "https://github.com/mikaelvesavuori/example-aws-stream-data-to-events",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "keywords": [],
+  "license": "MIT",
+  "devDependencies": {
+    "eslint": "8",
+    "eslint-config-prettier": "8",
+    "eslint-plugin-prettier": "4",
+    "prettier": "2"
+  },
+  "dependencies": {
+    "@aws-sdk/client-firehose": "3",
+    "@aws-sdk/client-sqs": "3"
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "parserOptions": {
+    "ecmaVersion": 2022,
+    "sourceType": "module"
+  },
+  "extends": [
+    "plugin:prettier/recommended"
+  ],
+  "rules": {
+    "complexity": ["warn", { "max": 9 }]
+  },
+  "env": {
+    "node": true,
+    "es6": true
+  }
+}

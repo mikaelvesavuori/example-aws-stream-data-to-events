@@ -1,0 +1,40 @@
+{
+  "name": "example-aws-stream-data-to-events-ingest",
+  "version": "1.0.0",
+  "description": "Ingestion layer components for the solution that streams data to events",
+  "author": "Mikael Vesavuori",
+  "homepage": "https://github.com/mikaelvesavuori/example-aws-stream-data-to-events",
+  "main": "webpack.config.js",
+  "license": "MIT",
+  "scripts": {
+    "start": "npx sls offline",
+    "deploy": "npx sls deploy",
+    "remove": "npx sls remove",
+    "build": "npx sls package"
+  },
+  "devDependencies": {
+    "@types/aws-lambda": "8",
+    "@types/node": "latest",
+    "@typescript-eslint/eslint-plugin": "5",
+    "@typescript-eslint/parser": "5",
+    "babel-loader": "8",
+    "eslint": "8",
+    "eslint-config-prettier": "8",
+    "eslint-plugin-prettier": "4",
+    "prettier": "2",
+    "serverless": "3",
+    "serverless-iam-roles-per-function": "3",
+    "serverless-offline": "8",
+    "serverless-webpack": "5",
+    "ts-loader": "9",
+    "tslib": "latest",
+    "typescript": "4",
+    "webpack": "5",
+    "webpack-cli": "latest"
+  },
+  "dependencies": {
+    "@aws-sdk/client-dynamodb": "3",
+    "@aws-sdk/client-eventbridge": "3",
+    "@aws-sdk/client-sqs": "3"
+  }
+}
