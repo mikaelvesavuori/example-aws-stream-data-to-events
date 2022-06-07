@@ -4,6 +4,8 @@ This repo contains a complete, working architecture on AWS that will take in str
 
 The example intends to be a valid and truthful, yet not completely minimal, example of this pattern. The state of this work is "solid", but can (and should!) be improved and adapted for the actual needs you might have. Please see the `Improvements and TODO` sections for concise ideas and open suggestions.
 
+**Please note that with the trivial database structure in use, your might get database records that get overwritten if they are written at the the same epoch time**. You can fix this by updating to a more resilient table format, for example by using a range key too.
+
 ## How it is structured
 
 The repo consists of three separate services (or stacks, if you will):
@@ -61,7 +63,9 @@ See the below diagram for how the overall flow moves through the various AWS com
 
 ## Configuration
 
-You should take a look at the Terraform modules (under `ingest/infra/`) and see that any settings, values, and regions are correct and/or optimized for your needs. **Before making any changes to names and such, please do a "find-all" in the repo to find references to any values you might want to change.**
+**Before making any changes to names and such, please do a "find-all" in the repo to find references to any values you might want to change.** Search especially for `123412341234` and replace it with your AWS account number.
+
+You should take a look at the Terraform modules (under `ingest/infra/`) and see that any settings, values, and regions are correct and/or optimized for your needs.
 
 Also, if you're not using Terraform Cloud, remove the `cloud` block from `ingest/infra/main.tf`.
 

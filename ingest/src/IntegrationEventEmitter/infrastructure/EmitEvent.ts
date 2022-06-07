@@ -16,7 +16,7 @@ const eventBridge = new EventBridgeClient({ region: 'eu-north-1' });
  * @param {string} eventName Name of event to emit
  * @param {Record<string, unknown>} data Object that contains data to emit
  */
-export async function emitEvent(eventName: string, data: Record<string, any>) {
+export async function emitEvent(eventName: string, data: Record<string, any>): Promise<any> {
   // @ts-ignore
   const command = integrationEvents[eventName](data, EVENT_BUS_NAME);
   const event = new PutEventsCommand({ Entries: [command] });

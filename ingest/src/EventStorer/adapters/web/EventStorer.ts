@@ -13,12 +13,12 @@ export async function handler(event: any) {
     const promises = records.map(async (record: any) => {
       const payload = record.body;
       const result = Buffer.from(payload, 'base64').toString('ascii');
-      await dynamo.updateItem(JSON.stringify(result));
+      return await dynamo.updateItem(JSON.stringify(result));
     });
 
-    await Promise.all(promises);
-
-    return { status: 204, body: '' };
+    await Promise.all(promises).then(() => {
+      return { status: 204, body: '' };
+    });
   } catch (error) {
     console.error(error);
 

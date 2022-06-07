@@ -1,4 +1,5 @@
 import { DynamoDBClient, PutItemCommand } from '@aws-sdk/client-dynamodb';
+import { v4 as uuidv4 } from 'uuid';
 
 const REGION = process.env.REGION;
 const TABLE_NAME = process.env.TABLE_NAME;
@@ -24,18 +25,21 @@ class DynamoRepository {
    * @description Create or update item.
    * @returns {void}
    */
-  async updateItem(data: any) {
+  async updateItem(data: any): Promise<any> {
     try {
-      // Set up required fields
-      const params = {
-        TableName: TABLE_NAME,
-        Item: {
-          key: { S: `${Date.now().toString()}` },
-          value: { S: JSON.stringify(data) }
-        }
-      };
+      const time = Date.now().toString();
+      const id = uuidv4();
 
-      await dynamoDb.send(new PutItemCommand(params));
+      return await dynamoDb.send(
+        new PutItemCommand({
+          TableName: TABLE_NAME,
+          Item: {
+            key: { S: `${time}` },
+            id: { S: `${id}` },
+            value: { S: JSON.stringify(data) }
+          }
+        })
+      );
     } catch (error: any) {
       throw new Error(error.message);
     } finally {

@@ -3,10 +3,12 @@
  * @description Order data.
  * @see https://www.ibm.com/docs/en/datapower-gateway/7.5.0?topic=json-examples
  */
-export function generateOrderData() {
+ export function generateOrderData() {
+  const sku = Math.floor(Math.random() * 1000);
+
   return {
     name: 'John Smith',
-    sku: '20223',
+    sku: `${sku}`,
     price: 23.95,
     shipTo: {
       name: 'Jane Smith',
@@ -31,9 +33,12 @@ export function generateOrderData() {
  * @see https://docs.aws.amazon.com/iotevents/latest/developerguide/iotevents-simple-example.html
  */
 export function generateDeviceData() {
+  const readingId = Math.floor(Math.random() * 1000);
+
   return {
     motorid: 'Fulton-A32',
     sensorData: {
+      readingId: `${readingId}`,
       pressure: 23,
       temperature: 47
     }
@@ -46,9 +51,12 @@ export function generateDeviceData() {
  * @see https://aws.amazon.com/blogs/awsforsap/maintain-an-sap-landscape-inventory-with-aws-systems-manager-and-amazon-athena/
  */
 export function generateInventoryData() {
+  const id = Math.floor(Math.random() * 1000);
+
   return {
     SchemaVersion: '1.0',
     TypeName: 'Custom:SAPInstanceList',
+    Id: `${id}`,
     Content: [
       {
         SID: 'SC3',
@@ -78,8 +86,11 @@ export function generateInventoryData() {
  * @see https://docs.aws.amazon.com/securityhub/latest/userguide/securityhub-cwe-event-formats.html
  */
 export function generateSecurityData() {
+  const something = Math.floor(Math.random() * 1000);
+
   return {
     version: '0',
+    something: `${something}`,
     id: '1a1111a1-b22b-3c33-444d-5555e5ee5555',
     'detail-type': 'Security Hub Insight Results',
     source: 'aws.securityhub',

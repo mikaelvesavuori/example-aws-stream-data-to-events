@@ -15,17 +15,21 @@ export async function handler(event: APIGatewayProxyEvent): Promise<void> {
       const eventId = record['eventID'];
       const eventName = record['eventName'].toUpperCase();
       console.log(`Event ID is ${eventId} and event name/type is ${eventName}`);
+      if (eventName === 'REMOVE') return;
 
-      const newImageString = record?.['dynamodb']?.['NewImage']?.['key']?.['S'];
-      const data =
-        newImageString && typeof newImageString === 'string' ? JSON.parse(newImageString) : '';
-      if (!data) throw new Error('Missing data to parse!');
+      const value = record?.['dynamodb']?.['NewImage']?.['value'];
 
-      return JSON.parse(data);
+      if (!value) {
+        console.log('Missing value!');
+        return;
+      }
+
+      if (isJsonString(value)) return JSON.parse(value);
+      return value;
     });
 
     const promises = records.map(
-      async (record: Record<string, any>) => await emitEvent('DataInserted', record)
+      async (record: Record<string, any>): Promise<any> => await emitEvent('DataInserted', record)
     );
 
     await Promise.all(promises);
@@ -33,3 +37,12 @@ export async function handler(event: APIGatewayProxyEvent): Promise<void> {
     console.error(error);
   }
 }
+
+const isJsonString = (str: string): Record<string, unknown> | boolean => {
+  try {
+    JSON.parse(str);
+  } catch (e) {
+    return false;
+  }
+  return true;
+};

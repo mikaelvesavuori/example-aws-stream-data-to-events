@@ -1,0 +1,17 @@
+.env
+.dccache
+.serverless/
+.webpack/
+node_modules
+build/
+outputs/
+coverage/
+jest-coverage/
+typedoc-docs/
+twistcli
+
+.terraform/
+.terraform.lock.hcl
+terraform.tfstate.d
+
+.infracost/

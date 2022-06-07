@@ -15,6 +15,7 @@
   "devDependencies": {
     "@types/aws-lambda": "8",
     "@types/node": "latest",
+    "@types/uuid": "8",
     "@typescript-eslint/eslint-plugin": "5",
     "@typescript-eslint/parser": "5",
     "babel-loader": "8",
@@ -35,6 +36,7 @@
   "dependencies": {
     "@aws-sdk/client-dynamodb": "3",
     "@aws-sdk/client-eventbridge": "3",
-    "@aws-sdk/client-sqs": "3"
+    "@aws-sdk/client-sqs": "3",
+    "uuid": "8"
   }
 }
